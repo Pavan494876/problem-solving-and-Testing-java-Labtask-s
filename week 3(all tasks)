@@ -1,0 +1,763 @@
+task 1:
+The Calendar class is an abstract class that provides methods for converting between a specific instant in time and a set of calendar fields such as YEAR, MONTH, DAY_OF_MONTH, HOUR, and so on, and for manipulating the calendar fields, such as getting the date of the next week.
+
+You are given a date. You just need to write the method, , which returns the day on that date. To simplify your task, we have provided a portion of the code in the editor.
+
+Example
+
+
+
+The method should return  as the day on that date.
+
+image
+
+Function Description
+
+Complete the findDay function in the editor below.
+
+findDay has the following parameters:
+
+int: month
+int: day
+int: year
+Returns
+
+string: the day of the week in capital letters
+Input Format
+
+A single line of input containing the space separated month, day and year, respectively, in    format.
+
+Constraints
+
+Sample Input
+
+08 05 2015
+Sample Output
+
+WEDNESDAY
+
+program:
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    public static String findDay(int month, int day, int year) {
+        Calendar cal = Calendar.getInstance();
+        
+        // Note: Calendar.MONTH is 0-indexed (January is 0), so we subtract 1
+        cal.set(year, month - 1, day);
+        
+        // Get the full display name of the day in uppercase
+        return cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US).toUpperCase();
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");
+
+        int month = Integer.parseInt(firstMultipleInput[0]);
+
+        int day = Integer.parseInt(firstMultipleInput[1]);
+
+        int year = Integer.parseInt(firstMultipleInput[2]);
+
+        String res = Result.findDay(month, day, year);
+
+        bufferedWriter.write(res);
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
+output:
+Input (stdin)
+08 05 2015
+Your Output (stdout)
+WEDNESDAY
+task 2:
+Write a program to count the number of days between two dates.
+
+The two dates are given as strings, their format is YYYY-MM-DD as shown in the examples.
+
+ 
+
+Example 1:
+
+Input: date1 = "2019-06-29", date2 = "2019-06-30"
+Output: 1
+Example 2:
+
+Input: date1 = "2020-01-15", date2 = "2019-12-31"
+Output: 15
+ 
+
+Constraints:
+
+The given dates are valid dates between the years 1971 and 2100.
+ 
+
+Seen this question in a real interview before?
+1/6
+Yes
+No
+Accepted
+78,290/146.7K
+Acceptance Rate
+53.4%
+program:
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+class Solution {
+    public int daysBetweenDates(String date1, String date2) {
+        // Parse the ISO-8601 formatted strings (YYYY-MM-DD) into LocalDate objects
+        LocalDate d1 = LocalDate.parse(date1);
+        LocalDate d2 = LocalDate.parse(date2);
+        
+        // Calculate the absolute difference in days between the two dates
+        long days = ChronoUnit.DAYS.between(d1, d2);
+        
+        return Math.abs((int) days);
+    }
+}
+output:
+Input
+date1 =
+"2019-06-29"
+date2 =
+"2019-06-30"
+Output
+1
+task 3:
+Given a string date representing a Gregorian calendar date formatted as YYYY-MM-DD, return the day number of the year.
+
+ 
+
+Example 1:
+
+Input: date = "2019-01-09"
+Output: 9
+Explanation: Given date is the 9th day of the year in 2019.
+Example 2:
+
+Input: date = "2019-02-10"
+Output: 41
+ 
+
+Constraints:
+
+date.length == 10
+date[4] == date[7] == '-', and all other date[i]'s are digits
+date represents a calendar date between Jan 1st, 1900 and Dec 31st, 2019.
+program:
+class Solution {
+    public int dayOfYear(String date) {
+        // Extract year, month, and day from the string segments
+        int year = Integer.parseInt(date.substring(0, 4));
+        int month = Integer.parseInt(date.substring(5, 7));
+        int day = Integer.parseInt(date.substring(8, 10));
+        
+        // Days in each month (index 1 is January, index 2 is February, etc.)
+        int[] daysInMonth = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        
+        // Check for leap year conditions in the Gregorian calendar
+        if (isLeapYear(year)) {
+            daysInMonth[2] = 29; // February has 29 days in a leap year
+        }
+        
+        int dayCount = day;
+        // Sum the days of all previous months in the current year
+        for (int i = 1; i < month; i++) {
+            dayCount += daysInMonth[i];
+        }
+        
+        return dayCount;
+    }
+    
+    private boolean isLeapYear(int year) {
+        // A year is a leap year if it is divisible by 4, 
+        // but not by 100 unless it is also divisible by 400
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+}
+output:
+Input
+date =
+"2019-01-09"
+Output
+9
+task 4:
+Given a date, return the corresponding day of the week for that date.
+
+The input is given as three integers representing the day, month and year respectively.
+
+Return the answer as one of the following values {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}.
+
+Note: January 1, 1971 was a Friday.
+
+ 
+
+Example 1:
+
+Input: day = 31, month = 8, year = 2019
+Output: "Saturday"
+Example 2:
+
+Input: day = 18, month = 7, year = 1999
+Output: "Sunday"
+Example 3:
+
+Input: day = 15, month = 8, year = 1993
+Output: "Sunday"
+ 
+
+Constraints:
+
+The given dates are valid dates between the years 1971 and 2100.
+program:
+class Solution {
+    public String dayOfTheWeek(int day, int month, int year) {
+        // String array starting from Friday because January 1, 1971 was a Friday
+        String[] days = {"Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"};
+        
+        // Days in each month (index 1 = Jan, index 2 = Feb, etc.)
+        int[] daysInMonth = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        
+        int totalDays = 0;
+        
+        // 1. Add days for all years from 1971 up to (year - 1)
+        for (int i = 1971; i < year; i++) {
+            totalDays += isLeapYear(i) ? 366 : 365;
+        }
+        
+        // 2. Add days for all months up to (month - 1) in the target year
+        for (int i = 1; i < month; i++) {
+            if (i == 2 && isLeapYear(year)) {
+                totalDays += 29;
+            } else {
+                totalDays += daysInMonth[i];
+            }
+        }
+        
+        // 3. Add the days of the current month (minus 1 because day 1 is 0 days away from start)
+        totalDays += day - 1;
+        
+        // Find the index in our days array
+        return days[totalDays % 7];
+    }
+    
+    private boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+}
+output:
+Input
+day =
+31
+month =
+8
+year =
+2019
+Output
+"Saturday"
+task 5:
+In computer science, a priority queue is an abstract data type which is like a regular queue, but where additionally each element has a "priority" associated with it. In a priority queue, an element with high priority is served before an element with low priority. - Wikipedia
+
+In this problem we will test your knowledge on Java Priority Queue.
+
+There are a number of students in a school who wait to be served. Two types of events, ENTER and SERVED, can take place which are described below.
+
+ENTER: A student with some priority enters the queue to be served.
+SERVED: The student with the highest priority is served (removed) from the queue.
+A unique id is assigned to each student entering the queue. The queue serves the students based on the following criteria (priority criteria):
+
+The student having the highest Cumulative Grade Point Average (CGPA) is served first.
+Any students having the same CGPA will be served by name in ascending case-sensitive alphabetical order.
+Any students having the same CGPA and name will be served in ascending order of the id.
+Create the following two classes:
+
+The Student class should implement:
+The constructor Student(int id, String name, double cgpa).
+The method int getID() to return the id of the student.
+The method String getName() to return the name of the student.
+The method double getCGPA() to return the CGPA of the student.
+The Priorities class should implement the method List<Student> getStudents(List<String> events) to process all the given events and return all the students yet to be served in the priority order.
+Input Format
+
+The first line contains an integer, , describing the total number of events. Each of the  subsequent lines will be of the following two forms:
+
+ENTER name CGPA id: The student to be inserted into the priority queue.
+SERVED: The highest priority student in the queue was served.
+The locked stub code in the editor reads the input and tests the correctness of the Student and Priorities classes implementation.
+
+Constraints
+
+Output Format
+
+The locked stub code prints the names of the students yet to be served in the priority order. If there are no such student, then the code prints EMPTY.
+
+Sample Input 0
+
+12
+ENTER John 3.75 50
+ENTER Mark 3.8 24
+ENTER Shafaet 3.7 35
+SERVED
+SERVED
+ENTER Samiha 3.85 36
+SERVED
+ENTER Ashley 3.9 42
+ENTER Maria 3.6 46
+ENTER Anik 3.95 49
+ENTER Dan 3.95 50
+SERVED
+Sample Output 0
+
+Dan
+Ashley
+Shafaet
+Maria
+Explanation 0
+
+In this case, the number of events is 12. Let the name of the queue be Q.
+
+John is added to Q. So, it contains (John, 3.75, 50).
+Mark is added to Q. So, it contains (John, 3.75, 50) and (Mark, 3.8, 24).
+Shafaet is added to Q. So, it contains (John, 3.75, 50), (Mark, 3.8, 24), and (Shafaet, 3.7, 35).
+Mark is served as he has the highest CGPA. So, Q contains (John, 3.75, 50) and (Shafaet, 3.7, 35).
+John is served next as he has the highest CGPA. So, Q contains (Shafaet, 3.7, 35).
+Samiha is added to Q. So, it contains (Shafaet, 3.7, 35) and (Samiha, 3.85, 36).
+Samiha is served as she has the highest CGPA. So, Q contains (Shafaet, 3.7, 35).
+Now, four more students are added to Q. So, it contains (Shafaet, 3.7, 35), (Ashley, 3.9, 42), (Maria, 3.6, 46), (Anik, 3.95, 49), and (Dan, 3.95, 50).
+Anik is served because though both Anil and Dan have the highest CGPA but Anik comes first when sorted in alphabetic order. So, Q contains (Dan, 3.95, 50), (Ashley, 3.9, 42), (Shafaet, 3.7, 35), and (Maria, 3.6, 46).
+As all events are completed, the name of each of the remaining students is printed on a new line.
+program:
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.*;
+
+// 1. Implement the Student Class
+class Student {
+    private final int id;
+    private final String name;
+    private final double cgpa;
+
+    public Student(int id, String name, double cgpa) {
+        this.id = id;
+        this.name = name;
+        this.cgpa = cgpa;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getCGPA() {
+        return cgpa;
+    }
+}
+
+// 2. Implement the Priorities Class
+class Priorities {
+    public List<Student> getStudents(List<String> events) {
+        // Multi-level comparator for priorities criteria
+        PriorityQueue<Student> pq = new PriorityQueue<>(
+            Comparator.comparingDouble(Student::getCGPA).reversed() // Highest CGPA first
+                      .thenComparing(Student::getName)             // Alphabetical order if CGPAs are equal
+                      .thenComparingInt(Student::getID)             // Lowest ID first if names are also equal
+        );
+
+        for (String event : events) {
+            String[] parts = event.split(" ");
+            
+            if (parts[0].equals("ENTER")) {
+                String name = parts[1];
+                double cgpa = Double.parseDouble(parts[2]);
+                int id = Integer.parseInt(parts[3]);
+                
+                pq.add(new Student(id, name, cgpa));
+            } else if (parts[0].equals("SERVED")) {
+                pq.poll(); // Removes the student with the highest priority
+            }
+        }
+
+        // Drain the priority queue into a sorted list of remaining students
+        List<Student> remainingStudents = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            remainingStudents.add(pq.poll());
+        }
+
+        return remainingStudents;
+    }
+}
+output:
+Input (stdin)
+12
+ENTER John 3.75 50
+ENTER Mark 3.8 24
+ENTER Shafaet 3.7 35
+SERVED
+SERVED
+ENTER Samiha 3.85 36
+SERVED
+ENTER Ashley 3.9 42
+ENTER Maria 3.6 46
+ENTER Anik 3.95 49
+ENTER Dan 3.95 50
+SERVED
+Your Output (stdout)
+Dan
+Ashley
+Shafaet
+Maria
+task 6:
+Sometimes it's better to use dynamic size arrays. Java's Arraylist can provide you this feature. Try to solve this problem using Arraylist.
+
+You are given  lines. In each line there are zero or more integers. You need to answer a few queries where you need to tell the number located in  position of  line.
+
+Take your input from System.in.
+
+Input Format
+The first line has an integer . In each of the next  lines there will be an integer  denoting number of integers on that line and then there will be  space-separated integers. In the next line there will be an integer  denoting number of queries. Each query will consist of two integers  and .
+
+Constraints
+
+Each number will fit in signed integer.
+Total number of integers in  lines will not cross .
+
+Output Format
+In each line, output the number located in  position of  line. If there is no such position, just print "ERROR!"
+
+Sample Input
+
+5
+5 41 77 74 22 44
+1 12
+4 37 34 36 52
+0
+3 20 22 33
+5
+1 3
+3 4
+3 1
+4 3
+5 5
+Sample Output
+
+74
+52
+37
+ERROR!
+ERROR!
+Explanation
+
+The diagram below explains the queries:
+
+program:
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void main(String[] academind) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Read the number of rows
+        int n = scanner.nextInt();
+        
+        // Create a dynamic 2D structure (List of Lists)
+        List<List<Integer>> rows = new ArrayList<>();
+        
+        for (int i = 0; i < n; i++) {
+            int d = scanner.nextInt();
+            List<Integer> currentRow = new ArrayList<>();
+            
+            for (int j = 0; j < d; j++) {
+                currentRow.add(scanner.nextInt());
+            }
+            rows.add(currentRow);
+        }
+        
+        // Read the number of queries
+        int q = scanner.nextInt();
+        
+        for (int i = 0; i < q; i++) {
+            // Convert 1-based index from input to 0-based index for ArrayList
+            int x = scanner.nextInt() - 1; 
+            int y = scanner.nextInt() - 1;
+            
+            // Validate if row x exists and if column y exists within that row
+            if (x >= 0 && x < rows.size() && y >= 0 && y < rows.get(x).size()) {
+                System.out.println(rows.get(x).get(y));
+            } else {
+                System.out.println("ERROR!");
+            }
+        }
+        
+        scanner.close();
+    }
+}
+output:
+Input (stdin)
+5
+5 41 77 74 22 44
+1 12
+4 37 34 36 52
+0
+3 20 22 33
+5
+1 3
+3 4
+3 1
+4 3
+5 5
+Your Output (stdout)
+74
+52
+37
+ERROR!
+ERROR!
+task 7:
+Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
+
+Since the result may be very large, so you need to return a string instead of an integer.
+
+ 
+
+Example 1:
+
+Input: nums = [10,2]
+Output: "210"
+Example 2:
+
+Input: nums = [3,30,34,5,9]
+Output: "9534330"
+ 
+
+Constraints:
+
+1 <= nums.length <= 100
+0 <= nums[i] <= 109
+program:
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Solution {
+    public String largestNumber(int[] nums) {
+        // Convert integer array to String array
+        String[] asStrs = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            asStrs[i] = String.valueOf(nums[i]);
+        }
+
+        // Sort using custom comparator logic
+        Arrays.sort(asStrs, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                String order1 = s1 + s2;
+                String order2 = s2 + s1;
+                // Sort in descending order
+                return order2.compareTo(order1);
+            }
+        });
+
+        // Edge case: If the largest number is "0", the whole number is 0
+        if (asStrs[0].equals("0")) {
+            return "0";
+        }
+
+        // Build the final largest number string
+        StringBuilder largestNumberStr = new StringBuilder();
+        for (String numAsStr : asStrs) {
+            largestNumberStr.append(numAsStr);
+        }
+
+        return largestNumberStr.toString();
+    }
+}
+output:
+Input
+nums =
+[10,2]
+Output
+"210"
+task 8:
+Comparators are used to compare two objects. In this challenge, you'll create a comparator and use it to sort an array.
+
+The Player class is provided for you in your editor. It has  fields: a  String and a  integer.
+
+Given an array of  Player objects, write a comparator that sorts them in order of decreasing score; if  or more players have the same score, sort those players alphabetically by name. To do this, you must create a Checker class that implements the Comparator interface, then write an int compare(Player a, Player b) method implementing the Comparator.compare(T o1, T o2) method.
+
+Input Format
+
+Input from stdin is handled by the locked stub code in the Solution class.
+
+The first line contains an integer, , denoting the number of players.
+Each of the  subsequent lines contains a player's  and , respectively.
+
+Constraints
+
+ players can have the same name.
+Player names consist of lowercase English letters.
+Output Format
+
+You are not responsible for printing any output to stdout. The locked stub code in Solution will create a Checker object, use it to sort the Player array, and print each sorted element.
+
+Sample Input
+
+5
+amy 100
+david 100
+heraldo 50
+aakansha 75
+aleksa 150
+Sample Output
+
+aleksa 150
+amy 100
+david 100
+aakansha 75
+heraldo 50
+program:
+import java.util.*;
+
+import java.util.Comparator;
+
+class Checker implements Comparator<Player> {
+    @Override
+    public int compare(Player a, Player b) {
+        // 1. If scores are identical, sort alphabetically ascending by name
+        if (a.score == b.score) {
+            return a.name.compareTo(b.name);
+        }
+        
+        // 2. Otherwise, sort by score descending
+        return Integer.compare(b.score, a.score);
+    }
+}
+
+class Player{
+    String name;
+    int score;
+    
+    Player(String name, int score){
+        this.name = name;
+        this.score = score;
+    }
+}
+
+class Solution {
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int n = scan.nextInt();
+
+        Player[] player = new Player[n];
+        Checker checker = new Checker();
+        
+        for(int i = 0; i < n; i++){
+            player[i] = new Player(scan.next(), scan.nextInt());
+        }
+        scan.close();
+
+        Arrays.sort(player, checker);
+        for(int i = 0; i < player.length; i++){
+            System.out.printf("%s %s\n", player[i].name, player[i].score);
+        }
+    }
+}
+output:
+Input (stdin)
+5
+amy 100
+david 100
+heraldo 50
+aakansha 75
+aleksa 150
+Your Output (stdout)
+aleksa 150
+amy 100
+david 100
+aakansha 75
+heraldo 50
+task 9:
+You are given an array of strings names, and an array heights that consists of distinct positive integers. Both arrays are of length n.
+
+For each index i, names[i] and heights[i] denote the name and height of the ith person.
+
+Return names sorted in descending order by the people's heights.
+
+ 
+
+Example 1:
+
+Input: names = ["Mary","John","Emma"], heights = [180,165,170]
+Output: ["Mary","Emma","John"]
+Explanation: Mary is the tallest, followed by Emma and John.
+Example 2:
+
+Input: names = ["Alice","Bob","Bob"], heights = [155,185,150]
+Output: ["Bob","Alice","Bob"]
+Explanation: The first Bob is the tallest, followed by Alice and the second Bob.
+ 
+
+Constraints:
+
+n == names.length == heights.length
+1 <= n <= 103
+1 <= names[i].length <= 20
+1 <= heights[i] <= 105
+names[i] consists of lower and upper case English letters.
+All the values of heights are distinct.
+program:
+import java.util.*;
+
+class Solution {
+    public String[] sortPeople(String[] names, int[] heights) {
+        int n = names.length;
+        Integer[] indices = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            indices[i] = i;
+        }
+        
+        // Sort indices based on heights in descending order
+        Arrays.sort(indices, (a, b) -> Integer.compare(heights[b], heights[a]));
+        
+        // Construct the final sorted names array
+        String[] result = new String[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = names[indices[i]];
+        }
+        
+        return result;
+    }
+}
+output:
+Input
+names =
+["Mary","John","Emma"]
+heights =
+[180,165,170]
+Output
+["Mary","Emma","John"]
